@@ -1,14 +1,15 @@
 package awesomeProject
+
 import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
+	"taher_first_go/handlers"
 )
 
 type App struct {
@@ -35,11 +36,12 @@ func (a *App) Run(addr string) {
 }
 
 func (a *App) initializeRoutes() {
-	a.Router.HandleFunc("/getCars", a.getCars).Methods("GET")
-	a.Router.HandleFunc("/addCar", a.addCar).Methods("POST")
-	a.Router.HandleFunc("/getCarId/{id:[0-9]+}", a.getCar).Methods("GET")
-	a.Router.HandleFunc("/uodateCar/{id:[0-9]+}", a.updateCar).Methods("PUT")
-	a.Router.HandleFunc("/deleteCar/{id:[0-9]+}", a.deleteCar).Methods("DELETE")
+	h := &handlers.Handler{}
+	a.Router.HandleFunc("/getCars", h.GetCar).Methods("GET")
+	a.Router.HandleFunc("/addCar", h.AddCar).Methods("POST")
+	a.Router.HandleFunc("/getCarId/{id:[0-9]+}", h.GetCar).Methods("GET")
+	a.Router.HandleFunc("/uodateCar/{id:[0-9]+}", h.UpdateCar).Methods("PUT")
+	a.Router.HandleFunc("/deleteCar/{id:[0-9]+}", h.DeleteCar).Methods("DELETE")
 }
 
 func (a *App) getCars(writer http.ResponseWriter, request *http.Request) {
